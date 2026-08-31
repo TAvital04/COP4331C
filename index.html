@@ -1,22 +1,158 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<title>COP 4331 LAMP Stack Demo</title>
-	<script type="text/javascript" src="js/md5.js"></script>
-	<script type="text/javascript" src="js/code.js"></script>
-    <link href="css/styles.css" rel="stylesheet">	
-    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COP 4331 Web Applications - Landing Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #c084fc;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+        }
+
+        .portal-container {
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .portal-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .portal-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .portal-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .app-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .app-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--accent-blue);
+            box-shadow: 0 20px 30px -10px rgba(56, 189, 248, 0.15);
+        }
+
+        .app-card.purple:hover {
+            border-color: var(--accent-purple);
+            box-shadow: 0 20px 30px -10px rgba(192, 132, 252, 0.15);
+        }
+
+        .app-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .app-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .app-link {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--accent-blue);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .app-card.purple .app-link {
+            color: var(--accent-purple);
+        }
+
+        .footer-text {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 40px;
+        }
+    </style>
 </head>
 <body>
+    <div class="portal-container">
+        <header class="portal-header">
+            <h1>COP 4331 Applications</h1>
+            <p>Select an application to launch</p>
+        </header>
 
-<h1 id="title">COP 4331 LAMP Stack Demo</h1>
+        <main class="app-grid">
+            <a href="colors/" class="app-card">
+                <div>
+                    <h2 class="app-title">🎨 Colors App</h2>
+                    <p class="app-desc">Starter LAMP stack application featuring user authentication, color list searching, and color addition.</p>
+                </div>
+                <span class="app-link">Launch Colors App &rarr;</span>
+            </a>
 
-<div id="loginDiv">
-	<span id="inner-title">PLEASE LOG IN</span>
-	<input type="text" id="loginName" placeholder="Username" /><br />
-	<input type="password" id="loginPassword" placeholder="Password"/><br />
-	<button type="button" id="loginButton" class="buttons" onclick="doLogin();"> Do It </button>
-	<span id="loginResult"></span>
-</div>
+            <a href="small-project/" class="app-card purple">
+                <div>
+                    <h2 class="app-title">📇 Contact Manager</h2>
+                    <p class="app-desc">Small Project application for managing personal contacts, full search capabilities, and API integration.</p>
+                </div>
+                <span class="app-link">Launch Contact Manager &rarr;</span>
+            </a>
+        </main>
 
+        <footer class="footer-text">
+            <p>Hosted on talavital.com &bull; COP4331 LAMP Stack Workspace</p>
+        </footer>
+    </div>
 </body>
 </html>

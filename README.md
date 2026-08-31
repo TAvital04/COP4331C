@@ -40,9 +40,10 @@ DB_NAME=COP4331
 ```
 *(Note: `.env` is listed in `.gitignore` so your personal credentials will never be committed to Git).*
 
-### 2. Project File Structure
-* **`LAMPAPI/`** – PHP backend API endpoints (`Login.php`, `AddColor.php`, `SearchColors.php`, `db.php`).
-* **Frontend** – `index.html`, `color.html`, `css/`, `js/`.
+### 2. Multi-App Project File Structure
+* **`index.html`** – Root landing portal linking to both applications.
+* **`colors/`** – Colors starter application (`index.html`, `color.html`, `css/`, `js/`, `LAMPAPI/`).
+* **`small-project/`** – Contact Manager application (`index.html`, `css/`, `js/`, `LAMPAPI/`).
 
 ### 3. Pushing Changes
 Always make changes on a feature branch or pull latest changes before pushing:
@@ -142,5 +143,5 @@ Whenever you or a team member push new code updates (e.g. changes to PHP, HTML, 
 4. **Test Live Domain**:
    Open `https://talavital.com/` in your browser or test endpoints:
    ```bash
-   curl -X POST https://talavital.com/LAMPAPI/Login.php -H "Content-Type: application/json" -d '{"login":"RickL","password":"COP4331"}'
+   curl -X POST https://talavital.com/colors/LAMPAPI/Login.php -H "Content-Type: application/json" -d '{"login":"RickL","password":"COP4331"}'
    ```

@@ -27,14 +27,21 @@ function loadEnv($envPath)
 
 function getDbConnection()
 {
-    // Load .env from root directory if present
+    // Load .env from project folder or workspace root if present
     loadEnv(__DIR__ . '/../.env');
+    loadEnv(__DIR__ . '/../../.env');
 
     $host = getenv('DB_HOST') ?: 'localhost';
-    $user = getenv('DB_USER') ?: '';
-    $pass = getenv('DB_PASSWORD') ?: '';
+    $user = getenv('DB_USER') ?: 'TheBeast';
+    $pass = getenv('DB_PASSWORD') ?: 'WeLoveCOP4331';
     $db   = getenv('DB_NAME') ?: 'COP4331';
 
-    return new mysqli($host, $user, $pass, $db);
+    $conn = new mysqli($host, $user, $pass, $db);
+    return $conn;
+}
+
+function getRequestInfo()
+{
+    return json_decode(file_get_contents('php://input'), true) ?? [];
 }
 ?>
