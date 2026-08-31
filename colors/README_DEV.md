@@ -79,6 +79,13 @@ Open a terminal shell and log into MySQL as root:
 ```bash
 mysql -u root -p
 ```
+
+> 💡 **XAMPP Windows Troubleshooting ("mysql is not recognized")**:
+> If PowerShell says `mysql` is not recognized:
+> - **Option 1 (Easiest)**: Open XAMPP Control Panel and click the **Shell** button on the right side. In that window, type `mysql -u root -p`.
+> - **Option 2**: Run using XAMPP's direct path in PowerShell: `C:\xampp\mysql\bin\mysql.exe -u root -p`
+> - *(Note: Default XAMPP root password is blank, so just press `Enter` when prompted for password).*
+
 *(Enter your MySQL root password when prompted)*.
 
 Once inside the MySQL prompt (`mysql>`), run the following SQL commands:
@@ -146,7 +153,17 @@ To connect to the live DigitalOcean droplet and update the colors application on
 
 ## Step 6: Run & Test the Application Locally & Live
 
-1. **Local Browser**: `http://localhost/colors/index.html`
+### A. Start Local Web Server (PHP Built-In Server)
+Open terminal inside the `LAMP Stack` repository folder and run:
+```bash
+php -S localhost:8000
+```
+Keep this terminal window open while testing.
+
+---
+
+### B. Browser & API Testing
+1. **Local Browser**: `http://localhost:8000/colors/index.html`
 2. **Live Domain**: `https://talavital.com/colors/index.html`
 3. Test API Endpoints using cURL:
    ```bash

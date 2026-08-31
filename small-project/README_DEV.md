@@ -156,9 +156,18 @@ sudo systemctl restart apache2
 
 ## Step 6: Local & Live Testing & Verification
 
-### A. Front-End Testing
+### A. Start Local Web Server (PHP Built-In Server)
+Open terminal inside the `LAMP Stack` repository folder and run:
+```bash
+php -S localhost:8000
+```
+Keep this terminal window open while testing.
+
+---
+
+### B. Front-End Testing
 1. Access the application in your browser:
-   - **Local**: `http://localhost/small-project/index.html`
+   - **Local Browser**: `http://localhost:8000/small-project/index.html`
    - **Live Domain**: `https://talavital.com/small-project/index.html`
 2. Test User Workflows:
    - **Registration**: Switch tab to **Register**, create a new account, verify redirect to Sign In.
