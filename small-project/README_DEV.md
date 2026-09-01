@@ -167,8 +167,8 @@ Keep this terminal window open while testing.
 
 ### B. Front-End Testing
 1. Access the application in your browser:
-   - **Local Browser**: `http://localhost:8000/small-project/index.html`
-   - **Live Domain**: `https://talavital.com/small-project/index.html`
+   - **Local Browser**: `http://localhost:8000/COP4331C/small-project/index.html`
+   - **Live Domain**: `https://talavital.com/COP4331C/small-project/index.html`
 2. Test User Workflows:
    - **Registration**: Switch tab to **Register**, create a new account, verify redirect to Sign In.
    - **Login**: Log in with `alexsmith` / `pass123`. Verify session cookie creation and transition to Contact Dashboard.
@@ -180,12 +180,12 @@ Test API responses in your shell terminal:
 
 ```bash
 # 1. Test Local Login Endpoint
-curl -X POST http://localhost/small-project/LAMPAPI/Login.php \
+curl -X POST http://localhost/COP4331C/small-project/LAMPAPI/Login.php \
   -H "Content-Type: application/json" \
   -d "{\"login\":\"alexsmith\",\"password\":\"pass123\"}"
 
 # 2. Test Live Server Login Endpoint
-curl -X POST https://talavital.com/small-project/LAMPAPI/Login.php \
+curl -X POST https://talavital.com/COP4331C/small-project/LAMPAPI/Login.php \
   -H "Content-Type: application/json" \
   -d "{\"login\":\"alexsmith\",\"password\":\"pass123\"}"
 ```
