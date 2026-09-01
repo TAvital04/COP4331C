@@ -109,4 +109,4 @@ All API requests expect HTTP `POST` with `Content-Type: application/json`.
 
 1. Ensure Apache and MySQL are running on your machine or server.
 2. Verify `.env` file exists in the repository root containing your database credentials.
-3. Access `http://localhost/small-project/index.html` in your web browser.
+3. Access `http://localhost/COP4331C/small-project/index.html` in your web browser.
