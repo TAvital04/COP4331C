@@ -1,0 +1,138 @@
+@startuml class
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam packageStyle rectangle
+
+title Class Diagram - COP 4331 Colors Web Application
+
+package "Frontend Presentation & Client Layer (HTML / JavaScript)" {
+    class LoginPage << (B,#ADD1B2) Boundary : index.html >> {
+        + title : HTMLHeadingElement
+        + loginName : HTMLInputElement
+        + loginPassword : HTMLInputElement
+        + loginButton : HTMLButtonElement
+        + loginResult : HTMLSpanElement
+    }
+
+    class ColorPage << (B,#ADD1B2) Boundary : color.html >> {
+        + title : HTMLHeadingElement
+        + userName : HTMLSpanElement
+        + logoutButton : HTMLButtonElement
+        + searchText : HTMLInputElement
+        + searchColorButton : HTMLButtonElement
+        + colorSearchResult : HTMLSpanElement
+        + colorList : HTMLParagraphElement
+        + colorText : HTMLInputElement
+        + addColorButton : HTMLButtonElement
+        + colorAddResult : HTMLSpanElement
+    }
+
+    class FrontendController << (C,#B4A7E5) Controller : js/code.js >> {
+        + urlBase : string = "/colors/LAMPAPI"
+        + extension : string = "php"
+        + userId : int = 0
+        + firstName : string = ""
+        + lastName : string = ""
+        --
+        + doLogin() : void
+        + saveCookie() : void
+        + readCookie() : void
+        + doLogout() : void
+        + addColor() : void
+        + searchColor() : void
+    }
+
+    class MD5Utility << (U,#EB937F) Utility : js/md5.js >> {
+        + md5(str : string) : string
+    }
+}
+
+package "Backend LAMP API Layer (PHP)" {
+    class DatabaseConnector << (M,#F1F1F1) Module : LAMPAPI/db.php >> {
+        - host : string = "localhost"
+        - user : string = ""
+        - pass : string = ""
+        - db : string = "COP4331"
+        --
+        + loadEnv(envPath : string) : void
+        + getDbConnection() : mysqli
+    }
+
+    class LoginAPI << (C,#B4A7E5) Endpoint : LAMPAPI/Login.php >> {
+        - inData : array
+        - id : int = 0
+        - firstName : string = ""
+        - lastName : string = ""
+        --
+        + getRequestInfo() : array
+        + sendResultInfoAsJson(obj : string) : void
+        + returnWithError(err : string) : void
+        + returnWithInfo(firstName : string, lastName : string, id : int) : void
+    }
+
+    class AddColorAPI << (C,#B4A7E5) Endpoint : LAMPAPI/AddColor.php >> {
+        - inData : array
+        - color : string
+        - userId : int
+        --
+        + getRequestInfo() : array
+        + sendResultInfoAsJson(obj : string) : void
+        + returnWithError(err : string) : void
+    }
+
+    class SearchColorsAPI << (C,#B4A7E5) Endpoint : LAMPAPI/SearchColors.php >> {
+        - inData : array
+        - searchResults : string = ""
+        - searchCount : int = 0
+        - colorName : string
+        --
+        + getRequestInfo() : array
+        + sendResultInfoAsJson(obj : string) : void
+        + returnWithError(err : string) : void
+        + returnWithInfo(searchResults : string) : void
+    }
+}
+
+package "Database Layer (MySQL - COP4331)" {
+    class Users << (E,#FFCC00) Entity : Users Table >> {
+        {field} + ID : INT (PK, AUTO_INCREMENT)
+        {field} + FirstName : VARCHAR(50)
+        {field} + LastName : VARCHAR(50)
+        {field} + Login : VARCHAR(50)
+        {field} + Password : VARCHAR(50)
+    }
+
+    class Colors << (E,#FFCC00) Entity : Colors Table >> {
+        {field} + ID : INT (PK, AUTO_INCREMENT)
+        {field} + Name : VARCHAR(50)
+        {field} + UserID : INT (FK -> Users.ID)
+    }
+}
+
+' Frontend Relationships
+LoginPage "1" --> "1" FrontendController : triggers doLogin() >
+LoginPage "1" ..> "0..1" MD5Utility : includes script >
+ColorPage "1" --> "1" FrontendController : triggers readCookie(), doLogout(),\naddColor(), searchColor() >
+
+' Frontend to Backend API Relationships (AJAX / XMLHttpRequest)
+FrontendController ..> LoginAPI : POST JSON\n{login, password}
+FrontendController ..> AddColorAPI : POST JSON\n{color, userId}
+FrontendController ..> SearchColorsAPI : POST JSON\n{search, userId}
+
+' Backend API to Database Connector Relationships
+LoginAPI ..> DatabaseConnector : require_once / getDbConnection()
+AddColorAPI ..> DatabaseConnector : require_once / getDbConnection()
+SearchColorsAPI ..> DatabaseConnector : require_once / getDbConnection()
+
+' Backend API & Connector to Database Entities
+DatabaseConnector --> Users : connects to COP4331
+DatabaseConnector --> Colors : connects to COP4331
+LoginAPI ..> Users : SELECT ID, firstName, lastName\nWHERE Login=? AND Password=?
+AddColorAPI ..> Colors : INSERT INTO Colors\n(UserId, Name)
+SearchColorsAPI ..> Colors : SELECT Name FROM Colors\nWHERE Name LIKE ? AND UserID=?
+
+' Entity Relationship (One-to-Many)
+Users "1" -- "0..*" Colors : owns (Users.ID = Colors.UserID) >
+
+@enduml

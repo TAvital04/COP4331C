@@ -1,0 +1,54 @@
+@startuml usecase
+left to right direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam nodesep 35
+skinparam ranksep 60
+
+title Use Case Diagram - COP 4331 Colors Web Application
+
+actor "User" as User
+actor "MySQL Database\n(COP4331)" as DB <<System>>
+
+rectangle "Colors Web Application" {
+    usecase "Log In\n(doLogin / Login.php)" as UC_Login
+    usecase "Add Color\n(addColor / AddColor.php)" as UC_AddColor
+    usecase "Search Colors\n(searchColor / SearchColors.php)" as UC_SearchColor
+    usecase "Log Out\n(doLogout)" as UC_Logout
+
+    usecase "Save Session Cookie\n(saveCookie)" as UC_SaveCookie
+    usecase "Verify Session Cookie\n(readCookie)" as UC_ReadCookie
+
+    usecase "Display Login Error\n('User/Password combination incorrect')" as UC_LoginError
+    usecase "Return No Records Found\n(searchCount == 0)" as UC_NoRecords
+}
+
+' Primary Actor Associations
+User --> UC_Login
+User --> UC_AddColor
+User --> UC_SearchColor
+User --> UC_Logout
+
+' Include Relationships (Base ..> Included)
+UC_Login ..> UC_SaveCookie : <<include>>
+UC_AddColor ..> UC_ReadCookie : <<include>>
+UC_SearchColor ..> UC_ReadCookie : <<include>>
+UC_Logout ..> UC_ReadCookie : <<include>>
+
+' Extend Relationships (Extending ..> Base, arrowhead points to Base Use Case)
+UC_Login <.. UC_LoginError : <<extend>>\n[userId < 1]
+UC_SearchColor <.. UC_NoRecords : <<extend>>\n[searchCount == 0]
+
+' Secondary Actor (Database) Associations
+UC_Login --> DB : SELECT Users
+UC_AddColor --> DB : INSERT Colors
+UC_SearchColor --> DB : SELECT Colors
+
+note bottom of UC_Logout
+  Clears client-side cookie and
+  redirects to index.html
+  (no database query required)
+end note
+
+@enduml

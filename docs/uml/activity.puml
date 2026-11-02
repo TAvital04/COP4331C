@@ -1,0 +1,100 @@
+@startuml activity
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam ConditionEndStyle hline
+
+title Activity Diagram - COP 4331 Colors Web Application
+
+|User / Browser (index.html, color.html, code.js)|
+start
+:Open Login Page (index.html);
+
+repeat
+  :Enter Username (loginName) and Password (loginPassword);
+  :Click 'Do It' Button (doLogin());
+  :Send HTTP POST JSON {login, password};
+
+  |LAMP API Backend (Login.php, AddColor.php, SearchColors.php, db.php)|
+  :Login.php reads JSON payload via getRequestInfo();
+  :Connect to MySQL via getDbConnection() (db.php);
+
+  if (Database Connection Error?) then (yes)
+    :returnWithError(connect_error)\n{id: 0, firstName: '', lastName: '', error: connect_error};
+  else (no)
+    |MySQL Database (COP4331)|
+    :Execute Prepared Statement:\nSELECT ID, firstName, lastName FROM Users\nWHERE Login=? AND Password=?;
+    |LAMP API Backend (Login.php, AddColor.php, SearchColors.php, db.php)|
+    if (Matching User Row Found?) then (yes)
+      :returnWithInfo(firstName, lastName, ID)\n{id, firstName, lastName, error: ''};
+    else (no)
+      :returnWithError('No Records Found')\n{id: 0, firstName: '', lastName: '', error: 'No Records Found'};
+    endif
+  endif
+
+  |User / Browser (index.html, color.html, code.js)|
+  :Parse JSON Response (userId = jsonObject.id);
+  backward :Display 'User/Password combination incorrect'\nin #loginResult;
+repeat while (userId < 1?) is (yes [Invalid Credentials])
+-> no [userId >= 1];
+
+:Save Session Cookie via saveCookie()\n(firstName, lastName, userId; expires = 20 min);
+:Redirect Browser to color.html;
+:DOMContentLoaded triggers readCookie();
+
+if (userId < 0 in Cookie?) then (yes [No Valid Session])
+  :Redirect Browser to index.html;
+  stop
+else (no [Valid Session])
+endif
+
+repeat
+  :Display Color Management View (color.html);
+  if (User Action on color.html?) then (Add Color)
+    :Enter Color Name in #colorText;
+    :Click 'Add Color' Button (addColor());
+    :Send HTTP POST JSON {color, userId};
+    |LAMP API Backend (Login.php, AddColor.php, SearchColors.php, db.php)|
+    :AddColor.php reads JSON payload via getRequestInfo();
+    :Connect to MySQL via getDbConnection();
+    if (Database Connection Error?) then (yes)
+      :returnWithError(connect_error);
+    else (no)
+      |MySQL Database (COP4331)|
+      :Execute Prepared Statement:\nINSERT INTO Colors (UserId, Name) VALUES (?, ?);
+      |LAMP API Backend (Login.php, AddColor.php, SearchColors.php, db.php)|
+      :returnWithError('')\n{error: ''};
+    endif
+    |User / Browser (index.html, color.html, code.js)|
+    :Display 'Color has been added' in #colorAddResult;
+  elseif (User Action on color.html?) then (Search Color)
+    :Enter Search Query in #searchText;
+    :Click 'Search Color' Button (searchColor());
+    :Send HTTP POST JSON {search, userId};
+    |LAMP API Backend (Login.php, AddColor.php, SearchColors.php, db.php)|
+    :SearchColors.php reads JSON payload via getRequestInfo();
+    :Connect to MySQL via getDbConnection();
+    if (Database Connection Error?) then (yes)
+      :returnWithError(connect_error);
+    else (no)
+      |MySQL Database (COP4331)|
+      :Execute Prepared Statement:\nSELECT Name FROM Colors\nWHERE Name LIKE '%search%' AND UserID=?;
+      |LAMP API Backend (Login.php, AddColor.php, SearchColors.php, db.php)|
+      if (searchCount == 0?) then (yes)
+        :returnWithError('No Records Found');
+      else (no)
+        :returnWithInfo(searchResults)\n{results: [...], error: ''};
+      endif
+    endif
+    |User / Browser (index.html, color.html, code.js)|
+    :Set #colorSearchResult to 'Color(s) has been retrieved';
+    :Render matching color names in <p id='colorList'>;
+  else (Log Out)
+    :Click 'Log Out' Button (doLogout());
+    :Reset userId = 0, firstName = '', lastName = '';
+    :Expire Session Cookie (expires = Thu, 01 Jan 1970 00:00:00 GMT);
+    :Redirect Browser to index.html;
+    stop
+  endif
+repeat while (Session Active on color.html?) is (yes)
+
+@enduml
