@@ -6,7 +6,8 @@
   "scripts": {
     "lint:html": "htmlhint \"colors/**/*.html\"",
     "lint:css": "stylelint \"colors/**/*.css\"",
-    "lint:js": "eslint \"colors/**/*.js\""
+    "lint:js": "eslint \"colors/**/*.js\"",
+    "test": "jest"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
