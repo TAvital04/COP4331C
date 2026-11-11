@@ -21,3 +21,13 @@ jobs:
 
       - name: Install linting dependencies
         run: npm ci
+
+      - name: Lint HTML files
+        run: npm run lint:html
+
+      - name: Lint CSS files
+        run: npm run lint:css
+
+      - name: Lint JavaScript files
+        run: npm run lint:js
+
