@@ -31,3 +31,7 @@ jobs:
       - name: Lint JavaScript files
         run: npm run lint:js
 
+      - name: Run automated tests
+        run: npm test
+
+
